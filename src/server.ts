@@ -10,10 +10,12 @@ import { renderLandingPage } from './landing.js';
 import { MonitorService } from './monitor-service.js';
 import { errorMessage } from './utils.js';
 
+import type { FastifyInstance } from 'fastify';
+
 // 不需要鉴权的公开路径（监控探活和 dashboard UI）
 const PUBLIC_PATHS = new Set(['/', '/dashboard', '/logo.png', '/api/health', '/health']);
 
-export async function startServer(service: MonitorService, host: string, port: number, graphqlEndpoint?: string): Promise<void> {
+export function createServer(service: MonitorService, graphqlEndpoint?: string): FastifyInstance {
   const app = Fastify({ logger: false });
   const apiKey = process.env['API_KEY'] ?? '';
 
@@ -250,6 +252,11 @@ export async function startServer(service: MonitorService, host: string, port: n
     return updated;
   });
 
+  return app;
+}
+
+export async function startServer(service: MonitorService, host: string, port: number, graphqlEndpoint?: string): Promise<void> {
+  const app = createServer(service, graphqlEndpoint);
   await app.listen({ host, port });
   console.log(`HTTP server listening on http://${host}:${port}`);
 }

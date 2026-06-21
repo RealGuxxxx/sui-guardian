@@ -14,6 +14,7 @@ import type {
   ScanRecord,
 } from './types.js';
 import { buildAlertFingerprint, nowIso, severityRank } from './utils.js';
+import { DEMO_STATE } from './demo-state-data.js';
 
 const MAX_SCAN_HISTORY = 200;
 const MAX_RECENT_TRANSACTION_DIGESTS = 5000;
@@ -25,6 +26,9 @@ export class StateStore {
   ) {}
 
   async load(): Promise<RuntimeState> {
+    if (process.env.VERCEL === '1') {
+      return { ...DEMO_STATE };
+    }
     try {
       const raw = await readFile(this.stateFile, 'utf8');
       const data = JSON.parse(raw) as Partial<RuntimeState> & {
@@ -45,11 +49,15 @@ export class StateStore {
         updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : nowIso(),
       };
     } catch {
-      return createEmptyRuntimeState();
+      return { ...DEMO_STATE };
     }
   }
 
   async save(state: RuntimeState): Promise<void> {
+    if (process.env.VERCEL === '1') {
+      console.log('[StateStore] Save ignored on Vercel serverless environment');
+      return;
+    }
     const dir = path.dirname(this.stateFile);
     await mkdir(dir, { recursive: true });
     await writeFile(this.stateFile, JSON.stringify(state, null, 2), 'utf8');
