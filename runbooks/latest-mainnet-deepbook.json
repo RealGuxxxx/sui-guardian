@@ -1,0 +1,241 @@
+{
+  "capturedAt": "2026-05-15T08:15:15.388Z",
+  "dashboardUrl": "http://127.0.0.1:3020/",
+  "sourceDocs": [
+    "https://docs.sui.io/onchain-finance/deepbookv3/contract-information"
+  ],
+  "endpoints": {
+    "readiness": {
+      "generatedAt": "2026-05-15T08:15:15.426Z",
+      "targetTrack": "DeFi & Payments",
+      "secondaryTrack": "Agentic Web",
+      "handbookUrl": "https://mystenlabs.notion.site/overflow-2026-handbook",
+      "score": 90,
+      "status": "ready",
+      "summary": "Submission-ready baseline reached (90/100). Focus the demo on real-time DeFi monitoring and response.",
+      "checks": [
+        {
+          "id": "track-fit",
+          "label": "Track fit",
+          "status": "pass",
+          "required": true,
+          "evidence": "Sui Guardian is positioned for DeFi & Payments, with AI-generated monitoring rules as an Agentic Web extension.",
+          "action": "Keep the submission focused on DeFi protocol loss prevention and incident response."
+        },
+        {
+          "id": "real-project-config",
+          "label": "Real project configuration",
+          "status": "pass",
+          "required": true,
+          "evidence": "1 monitored project(s) configured.",
+          "action": "Add at least one real Sui protocol package, protected address, and admin sender to the active config."
+        },
+        {
+          "id": "core-detection-coverage",
+          "label": "Core detection coverage",
+          "status": "pass",
+          "required": true,
+          "evidence": "2 package(s), 1 protected address(es), 8 function guard(s), 7 behavior/object rule(s).",
+          "action": "Cover package upgrades, treasury/vault outflows, privileged functions, and burst/failure/object anomalies."
+        },
+        {
+          "id": "mainnet-path",
+          "label": "Mainnet deployment path",
+          "status": "pass",
+          "required": true,
+          "evidence": "Configured for mainnet via https://graphql.mainnet.sui.io/graphql.",
+          "action": "Run the final demo against Sui mainnet, or clearly mark testnet-only evidence in the submission."
+        },
+        {
+          "id": "live-chain-evidence",
+          "label": "Live chain evidence",
+          "status": "pass",
+          "required": true,
+          "evidence": "Last successful scan processed checkpoint 275788168 with 82 transaction(s).",
+          "action": "Run a successful scan before recording the submission demo."
+        },
+        {
+          "id": "incident-response-loop",
+          "label": "Incident response loop",
+          "status": "pass",
+          "required": true,
+          "evidence": "Dashboard and API support incident aggregation, open/acknowledged/resolved states, scan history, and remediation notes.",
+          "action": "In the demo, show one alert being acknowledged or resolved to prove the operator workflow."
+        },
+        {
+          "id": "notification-channel",
+          "label": "Notification channel",
+          "status": "warn",
+          "required": false,
+          "evidence": "Webhook dispatch is not configured.",
+          "action": "Configure Slack, Discord, or a generic incident webhook for the live demo."
+        },
+        {
+          "id": "ai-rule-generation",
+          "label": "AI rule generation",
+          "status": "warn",
+          "required": false,
+          "evidence": "AI rule generation exists, but hot reload is disabled in the active config.",
+          "action": "Use the AI analysis panel or generated rules flow in the demo if pitching the Agentic Web angle."
+        },
+        {
+          "id": "known-exploit-hardening",
+          "label": "Known exploit hardening",
+          "status": "warn",
+          "required": false,
+          "evidence": "No deprecated package addresses are configured.",
+          "action": "Add deprecated package addresses for protocols with retired vulnerable versions."
+        }
+      ],
+      "criticalGaps": [],
+      "submissionAssets": [
+        {
+          "label": "README",
+          "path": "README.md",
+          "purpose": "Project positioning, local run commands, API overview, and demo flow."
+        },
+        {
+          "label": "Overflow submission guide",
+          "path": "docs/overflow-submission.md",
+          "purpose": "Hackathon track fit, judging narrative, demo script, and final checklist."
+        },
+        {
+          "label": "Architecture",
+          "path": "docs/architecture.md",
+          "purpose": "System design, data flow, rule engine, and production roadmap."
+        },
+        {
+          "label": "Production config template",
+          "path": "config/projects.example.yml",
+          "purpose": "Mainnet-ready project configuration template."
+        }
+      ]
+    },
+    "health": {
+      "ok": true,
+      "lastCheckpoint": 275787209,
+      "updatedAt": "2026-05-15T08:15:13.064Z",
+      "consecutiveScanFailures": 0
+    },
+    "config": {
+      "network": {
+        "name": "mainnet",
+        "graphqlEndpoint": "https://graphql.mainnet.sui.io/graphql",
+        "pollIntervalMs": 5000,
+        "bootstrapLookbackCheckpoints": 2,
+        "checkpointOverlap": 2,
+        "maxCheckpointsPerTick": 8,
+        "maxTransactionsPerPage": 50
+      },
+      "storage": {
+        "stateFile": ".data/mainnet-deepbook-state.json",
+        "maxAlerts": 500
+      },
+      "alerts": {
+        "console": true,
+        "webhookEnabled": false
+      },
+      "projects": [
+        {
+          "id": "deepbook-v3-mainnet",
+          "name": "DeepBook V3 Mainnet Read-Only",
+          "packageCount": 2,
+          "protectedAddressCount": 1,
+          "functionGuardCount": 8,
+          "trackedObjectCount": 5,
+          "suspiciousTargetCount": 0,
+          "priceModelCount": 0,
+          "objectBaselineCount": 0,
+          "suppressionEnabled": true,
+          "suspiciousTargets": [],
+          "behaviorRules": {
+            "enabled": false,
+            "minRepeatedCalls": 3,
+            "minProtectedOutflow": "10000000000000",
+            "priceDeviationThresholdBps": 2000
+          },
+          "packages": [
+            {
+              "label": "deepbook-v3-active-package",
+              "address": "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e",
+              "allowedUpgradeSenderCount": 1,
+              "deprecatedAddressCount": 0
+            },
+            {
+              "label": "deepbook-v3-current-package",
+              "address": "0x337f4f4f6567fcd778d5454f27c16c70e2f274cc6377ea6249ddf491482ef497",
+              "allowedUpgradeSenderCount": 1,
+              "deprecatedAddressCount": 0
+            }
+          ],
+          "trackedObjects": [
+            {
+              "label": "deepbook-registry",
+              "address": "0xaf16199a2dff736e9f07a845f23c5da6df6f756eddb631aed9d24a93efc4549d",
+              "watchFields": [
+                "inner.version"
+              ],
+              "criticalFields": [
+                "inner.version"
+              ]
+            },
+            {
+              "label": "deep-treasury",
+              "address": "0x032abf8948dda67a271bcc18e776dbbcfb0d58c8d288a700ff0d5521e57a1ffe",
+              "watchFields": [
+                "id"
+              ],
+              "criticalFields": [
+                "id"
+              ]
+            },
+            {
+              "label": "deep-sui-pool",
+              "address": "0xb663828d6217467c8a1838a03793da896cbe745b150ebd57d82f814ca579fc22",
+              "watchFields": [
+                "inner.version"
+              ],
+              "criticalFields": [
+                "inner.version"
+              ]
+            },
+            {
+              "label": "sui-usdc-pool",
+              "address": "0xe05dafb5133bcffb8d59f4e12465dc0e9faeaa05e3e342a08fe135800e3e4407",
+              "watchFields": [
+                "inner.version"
+              ],
+              "criticalFields": [
+                "inner.version"
+              ]
+            },
+            {
+              "label": "deep-usdc-pool",
+              "address": "0xf948981b806057580f91622417534f491da5f61aeaf33d0ed8e69fd5691c95ce",
+              "watchFields": [
+                "inner.version"
+              ],
+              "criticalFields": [
+                "inner.version"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "scans": [
+      {
+        "id": "6abc4661-cd2e-4970-8f0e-653f06b53c97",
+        "startedAt": "2026-05-15T08:15:01.700Z",
+        "finishedAt": "2026-05-15T08:15:13.064Z",
+        "latestCheckpoint": 275788168,
+        "checkpointsProcessed": 10,
+        "transactionsProcessed": 82,
+        "alertsTriggered": 0,
+        "durationMs": 11364,
+        "success": true
+      }
+    ],
+    "alerts": []
+  }
+}

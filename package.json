@@ -1,0 +1,35 @@
+{
+  "name": "sui-guardian",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "scan:once": "tsx src/index.ts --once",
+    "ai:generate": "tsx src/ai/cli.ts",
+    "ai:deploy:testnet": "python3 scripts/deploy_sui_defi_testnet.py",
+    "webhook:sink": "python3 scripts/webhook_sink.py",
+    "mainnet:deepbook:scan": "tsx src/index.ts --once --config config/mainnet.deepbook.yml",
+    "mainnet:deepbook": "node dist/index.js --config config/mainnet.deepbook.yml",
+    "lab:vuln-defi": "python3 scripts/run_vuln_defi_lab.py",
+    "lab:defi-range": "python3 scripts/run_defi_range_lab.py",
+    "demo:overflow": "python3 scripts/run_defi_range_lab.py",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "fastify": "^5.6.1",
+    "yaml": "^2.8.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

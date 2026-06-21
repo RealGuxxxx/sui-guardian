@@ -1,0 +1,24 @@
+network:
+  name: mainnet
+  graphqlEndpoint: https://graphql.mainnet.sui.io/graphql
+  pollIntervalMs: 5000
+  bootstrapLookbackCheckpoints: 5
+  checkpointOverlap: 3
+  maxCheckpointsPerTick: 5
+  maxTransactionsPerPage: 50
+
+storage:
+  stateFile: .data/state.json
+  maxAlerts: 200
+
+server:
+  host: 0.0.0.0
+  port: 3000
+
+alerts:
+  console: true
+  webhookUrl: ""
+
+# 默认不内置任何示例/测试监控对象。
+# 请复制 config/projects.example.yml，改成你的真实项目地址后再启用监控。
+projects: []

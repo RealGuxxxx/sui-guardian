@@ -1,0 +1,12 @@
+[package]
+name = "Airdrop"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://gitee.com/mystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
+Library = { git = "https://github.com/interest-protocol/sui-defi", subdir = "library", rev = "main" }
+IPX = { git = "https://github.com/interest-protocol/sui-defi", subdir = "ipx", rev = "main" }
+
+[addresses]
+airdrop =  "0x0"
+sui =  "0x2"

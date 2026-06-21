@@ -1,0 +1,191 @@
+{
+  "executed_at": "2026-04-24T07:02:33Z",
+  "network": "testnet",
+  "admin_address": "0xee4fefc8f5705100b4aebc51c96d62224b7f8281a77ab9c8a73bea4b34dd5c08",
+  "attacker_address": "0x273a6c6750a62387dd9b792619db2d93070a79aa84931d6baa1c7294d5bf7196",
+  "attacker_funding_digest": "56ZVn948TSvprZMuHwSbiFujPfeFFaV3ikEUGysN2GF",
+  "publish": {
+    "digest": "EFmML6dXfmyqmP7Pbkt6GFXUgDpaUwsBLUi2ci1WDBgx",
+    "package_id": "0x18f3e5397f7aca95a82720fbf524b50ad57ef877ed350cc38c81b8d89a8130cd",
+    "pool_id": "0x6ed76f807338232607f830a78874f6d310d17bbc4cec1b3861888bf53cd098ef",
+    "upgrade_cap_id": "0x3bbc47de18cdf4eed8cc56acc0b3539fed07081ee96dfcec468b3192536ffc87"
+  },
+  "deposit": {
+    "digest": "ALBwLHMq4P84Vz7SqimBKFXSqhX9AiWuSrjtQaWV3fiF",
+    "coin_object_id": "0xa98a822772e15154759e19d19cdb47ba481a531cea1bad99c38fc25e4f459f6d",
+    "amount_mist": 1000000000
+  },
+  "attack": {
+    "digest": "6MU7xLDQN72JowQ1aSA9rNsuL8cjCCqscgJsVuUx4QeX"
+  },
+  "monitor": {
+    "config_path": "/Users/seem/Desktop/sui-guardian/config/generated-vuln-defi-lab.yml",
+    "state_path": "/Users/seem/Desktop/sui-guardian/.data/generated-vuln-defi-lab-state.json",
+    "log_path": "/Users/seem/Desktop/sui-guardian/.data/generated-vuln-defi-lab-monitor.log",
+    "url": "http://127.0.0.1:3010/",
+    "port": 3010,
+    "alert": {
+      "id": "1f45760b-402d-4ac8-96d0-13b39609a83c",
+      "createdAt": "2026-04-24T07:02:32.080Z",
+      "projectId": "generated-vuln-defi-lab",
+      "projectName": "自动化漏洞 DeFi 实验室",
+      "ruleId": "function-guard:emergency-withdraw-all",
+      "ruleName": "高危函数越权调用检测",
+      "severity": "critical",
+      "summary": "检测到非授权地址调用敏感函数 insecure_lending::emergency_withdraw_all",
+      "details": {
+        "guardLabel": "emergency-withdraw-all",
+        "digest": "6MU7xLDQN72JowQ1aSA9rNsuL8cjCCqscgJsVuUx4QeX",
+        "checkpoint": 329255285,
+        "sender": "0x273a6c6750a62387dd9b792619db2d93070a79aa84931d6baa1c7294d5bf7196",
+        "call": {
+          "package": "0x18f3e5397f7aca95a82720fbf524b50ad57ef877ed350cc38c81b8d89a8130cd",
+          "module": "insecure_lending",
+          "function": "emergency_withdraw_all"
+        }
+      },
+      "fingerprint": "3621fd2c9f15fe3bbf6a3f9c",
+      "status": "open",
+      "firstSeenAt": "2026-04-24T07:02:32.080Z",
+      "lastSeenAt": "2026-04-24T07:02:32.080Z",
+      "updatedAt": "2026-04-24T07:02:32.080Z",
+      "occurrences": 1
+    },
+    "metrics": {
+      "runtime": {
+        "lastCheckpoint": 329255286,
+        "latestKnownCheckpoint": 329255762,
+        "updatedAt": "2026-04-24T07:02:32.424Z",
+        "scanInFlight": true
+      },
+      "monitoring": {
+        "projectCount": 1,
+        "packageCount": 1,
+        "protectedAddressCount": 0,
+        "functionGuardCount": 1
+      },
+      "alerts": {
+        "total": 1,
+        "byStatus": {
+          "open": 1,
+          "acknowledged": 0,
+          "resolved": 0
+        },
+        "bySeverity": {
+          "info": 0,
+          "low": 0,
+          "medium": 0,
+          "high": 0,
+          "critical": 1
+        },
+        "openCritical": 1,
+        "openHighOrAbove": 1
+      },
+      "scans": {
+        "total": 12,
+        "last": {
+          "id": "f9c86ee7-06cf-4aac-9620-a2300d64ba41",
+          "startedAt": "2026-04-24T07:02:16.602Z",
+          "finishedAt": "2026-04-24T07:02:23.629Z",
+          "latestCheckpoint": 329255720,
+          "checkpointsProcessed": 15,
+          "transactionsProcessed": 122,
+          "alertsTriggered": 0,
+          "durationMs": 7027,
+          "success": true
+        },
+        "lastSuccessful": {
+          "id": "f9c86ee7-06cf-4aac-9620-a2300d64ba41",
+          "startedAt": "2026-04-24T07:02:16.602Z",
+          "finishedAt": "2026-04-24T07:02:23.629Z",
+          "latestCheckpoint": 329255720,
+          "checkpointsProcessed": 15,
+          "transactionsProcessed": 122,
+          "alertsTriggered": 0,
+          "durationMs": 7027,
+          "success": true
+        },
+        "successRateLast20": 1,
+        "averageDurationMs": 6857
+      }
+    },
+    "recent_scans": [
+      {
+        "id": "f9c86ee7-06cf-4aac-9620-a2300d64ba41",
+        "startedAt": "2026-04-24T07:02:16.602Z",
+        "finishedAt": "2026-04-24T07:02:23.629Z",
+        "latestCheckpoint": 329255720,
+        "checkpointsProcessed": 15,
+        "transactionsProcessed": 122,
+        "alertsTriggered": 0,
+        "durationMs": 7027,
+        "success": true
+      },
+      {
+        "id": "83cfab35-5fd7-4124-bba4-9f0ea18c1c06",
+        "startedAt": "2026-04-24T07:02:06.602Z",
+        "finishedAt": "2026-04-24T07:02:13.742Z",
+        "latestCheckpoint": 329255679,
+        "checkpointsProcessed": 15,
+        "transactionsProcessed": 118,
+        "alertsTriggered": 0,
+        "durationMs": 7140,
+        "success": true
+      },
+      {
+        "id": "ff723141-2f24-4f62-b7a7-6700ff03efb0",
+        "startedAt": "2026-04-24T07:01:56.601Z",
+        "finishedAt": "2026-04-24T07:02:03.677Z",
+        "latestCheckpoint": 329255639,
+        "checkpointsProcessed": 15,
+        "transactionsProcessed": 120,
+        "alertsTriggered": 0,
+        "durationMs": 7076,
+        "success": true
+      },
+      {
+        "id": "387514ce-d6b6-41f2-a6bc-5c2ec7f04291",
+        "startedAt": "2026-04-24T07:01:46.600Z",
+        "finishedAt": "2026-04-24T07:01:53.755Z",
+        "latestCheckpoint": 329255598,
+        "checkpointsProcessed": 15,
+        "transactionsProcessed": 117,
+        "alertsTriggered": 0,
+        "durationMs": 7155,
+        "success": true
+      },
+      {
+        "id": "85b7f6e0-ab43-4141-b415-012c2e4f770b",
+        "startedAt": "2026-04-24T07:01:36.600Z",
+        "finishedAt": "2026-04-24T07:01:43.858Z",
+        "latestCheckpoint": 329255558,
+        "checkpointsProcessed": 15,
+        "transactionsProcessed": 129,
+        "alertsTriggered": 0,
+        "durationMs": 7258,
+        "success": true
+      }
+    ]
+  },
+  "balances": {
+    "admin_gas": [
+      {
+        "gasCoinId": "0x267d982f99d56c55238f92f875d29fede40573bf3f706707971636b9de19590b",
+        "mistBalance": 4612499376,
+        "suiBalance": "4.61"
+      }
+    ],
+    "attacker_gas": [
+      {
+        "gasCoinId": "0x0be9520f7b763f24b6642025cd7c0f8c5178d10f753f8dc7886e3148a9942d80",
+        "mistBalance": 297985628,
+        "suiBalance": "0.29"
+      },
+      {
+        "gasCoinId": "0xdcfc4499f1ed17960dbf9c202136dbad79fb37b62c59e65614023bf29cc5509f",
+        "mistBalance": 1000000000,
+        "suiBalance": "1.00"
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+network:
+  name: testnet
+  graphqlEndpoint: https://graphql.testnet.sui.io/graphql
+  pollIntervalMs: 5000
+  bootstrapLookbackCheckpoints: 80
+  checkpointOverlap: 5
+  maxCheckpointsPerTick: 10
+  maxTransactionsPerPage: 50
+
+storage:
+  stateFile: .data/generated-vuln-defi-lab-state.json
+  maxAlerts: 200
+
+server:
+  host: 0.0.0.0
+  port: 3010
+
+alerts:
+  console: true
+  webhookUrl: ""
+
+projects:
+  - id: generated-vuln-defi-lab
+    name: 自动化漏洞 DeFi 实验室
+    packages:
+      - label: insecure-lending
+        address: "0x18f3e5397f7aca95a82720fbf524b50ad57ef877ed350cc38c81b8d89a8130cd"
+        allowedUpgradeSenders:
+          - "0xee4fefc8f5705100b4aebc51c96d62224b7f8281a77ab9c8a73bea4b34dd5c08"
+    protectedAddresses: []
+    functionGuards:
+      - label: emergency-withdraw-all
+        package: "0x18f3e5397f7aca95a82720fbf524b50ad57ef877ed350cc38c81b8d89a8130cd"
+        module: insecure_lending
+        function: emergency_withdraw_all
+        allowedSenders:
+          - "0xee4fefc8f5705100b4aebc51c96d62224b7f8281a77ab9c8a73bea4b34dd5c08"
+        severity: critical
+    trafficSpikes: []
+    failureSpikes: []

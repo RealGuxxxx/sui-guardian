@@ -1,0 +1,186 @@
+# DeepBook V3 read-only mainnet monitor.
+# Source checked on 2026-05-15:
+# https://docs.sui.io/onchain-finance/deepbookv3/contract-information
+#
+# Claim boundary:
+# - This config uses public Sui documentation and live mainnet object checks.
+# - It is a read-only monitoring integration, not an official DeepBook deployment by this project.
+# - Function allowlists should be confirmed with the DeepBook/Sui team before production paging.
+
+network:
+  name: mainnet
+  graphqlEndpoint: https://graphql.mainnet.sui.io/graphql
+  pollIntervalMs: 5000
+  bootstrapLookbackCheckpoints: 2
+  checkpointOverlap: 2
+  maxCheckpointsPerTick: 8
+  maxTransactionsPerPage: 50
+
+storage:
+  stateFile: .data/mainnet-deepbook-state.json
+  maxAlerts: 500
+
+server:
+  host: 0.0.0.0
+  port: 3020
+
+alerts:
+  console: true
+  webhookUrl: ""
+
+aiRules:
+  enabled: false
+  generatedDir: .data/generated
+  reloadIntervalMs: 60000
+  shadow:
+    enabled: true
+    notify: false
+    minMinutes: 60
+  canary:
+    enabled: true
+    stage: shadow
+    promotionMinMinutes: 60
+
+projects:
+  - id: deepbook-v3-mainnet
+    name: DeepBook V3 Mainnet Read-Only
+    packages:
+      - label: deepbook-v3-active-package
+        # Active package observed in live mainnet DeepBook order transactions and
+        # @mysten/deepbook-v3 SDK constants.
+        address: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        allowedUpgradeSenders:
+          - "0x37f187e1e54e9c9b8c78b6c46a7281f644ebc62e75493623edcaa6d1dfcf64d2"
+      - label: deepbook-v3-current-package
+        # Official docs list this as Version 6, published Jan 7, 2026.
+        address: "0x337f4f4f6567fcd778d5454f27c16c70e2f274cc6377ea6249ddf491482ef497"
+        # Chain-observed sender for the current package publish transaction.
+        # Confirm this with the protocol team before using it as a production allowlist.
+        allowedUpgradeSenders:
+          - "0x37f187e1e54e9c9b8c78b6c46a7281f644ebc62e75493623edcaa6d1dfcf64d2"
+    protectedAddresses:
+      - label: deep-treasury
+        address: "0x032abf8948dda67a271bcc18e776dbbcfb0d58c8d288a700ff0d5521e57a1ffe"
+        outflowThresholds:
+          "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP": "100000000000000"
+        allowedSenders: []
+    functionGuards:
+      - label: registry-disable-version
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: registry
+        function: disable_version
+        allowedSenders: []
+        severity: critical
+      - label: registry-enable-version
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: registry
+        function: enable_version
+        allowedSenders: []
+        severity: high
+      - label: registry-set-treasury-address
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: registry
+        function: set_treasury_address
+        allowedSenders: []
+        severity: critical
+      - label: registry-authorize-app
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: registry
+        function: authorize_app
+        allowedSenders: []
+        severity: high
+      - label: registry-deauthorize-app
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: registry
+        function: deauthorize_app
+        allowedSenders: []
+        severity: high
+      - label: pool-create-admin
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: pool
+        function: create_pool_admin
+        allowedSenders: []
+        severity: critical
+      - label: pool-adjust-tick-size-admin
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: pool
+        function: adjust_tick_size_admin
+        allowedSenders: []
+        severity: high
+      - label: pool-adjust-min-lot-size-admin
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        module: pool
+        function: adjust_min_lot_size_admin
+        allowedSenders: []
+        severity: high
+    trafficSpikes:
+      - label: deepbook-mainnet-hot-burst
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        windowSeconds: 60
+        txCountThreshold: 250
+        uniqueSenderThreshold: 80
+        severity: medium
+        cooldownSeconds: 300
+    failureSpikes:
+      - label: deepbook-mainnet-failure-burst
+        package: "0xf48222c4e057fa468baf136bff8e12504209d43850c5778f76159292a96f621e"
+        windowSeconds: 60
+        failedTxThreshold: 40
+        severity: medium
+        cooldownSeconds: 300
+    trackedObjects:
+      - label: deepbook-registry
+        address: "0xaf16199a2dff736e9f07a845f23c5da6df6f756eddb631aed9d24a93efc4549d"
+        watchFields:
+          - inner.version
+        criticalFields:
+          - inner.version
+        severity: high
+      - label: deep-treasury
+        address: "0x032abf8948dda67a271bcc18e776dbbcfb0d58c8d288a700ff0d5521e57a1ffe"
+        watchFields:
+          - id
+        criticalFields:
+          - id
+        severity: critical
+      - label: deep-sui-pool
+        address: "0xb663828d6217467c8a1838a03793da896cbe745b150ebd57d82f814ca579fc22"
+        watchFields:
+          - inner.version
+        criticalFields:
+          - inner.version
+        severity: high
+      - label: sui-usdc-pool
+        address: "0xe05dafb5133bcffb8d59f4e12465dc0e9faeaa05e3e342a08fe135800e3e4407"
+        watchFields:
+          - inner.version
+        criticalFields:
+          - inner.version
+        severity: high
+      - label: deep-usdc-pool
+        address: "0xf948981b806057580f91622417534f491da5f61aeaf33d0ed8e69fd5691c95ce"
+        watchFields:
+          - inner.version
+        criticalFields:
+          - inner.version
+        severity: high
+    suspiciousTargets: []
+    behaviorRules:
+      enabled: false
+      minRepeatedCalls: 3
+      minProtectedOutflow: "10000000000000"
+      priceDeviationThresholdBps: 2000
+    attackDetectors:
+      enabled: false
+    priceModels: []
+    objectBaselines: []
+    flowTracking:
+      enabled: true
+      minProtectedOutflow: "10000000000000"
+      attackerGainThreshold: "10000000000000"
+      shortWindowTxCount: 3
+    suppression:
+      enabled: true
+      duplicateWindowSeconds: 600
+      weakSignalScoreThreshold: 40
+      maintenanceWindows: []

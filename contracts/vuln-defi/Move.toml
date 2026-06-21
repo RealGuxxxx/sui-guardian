@@ -1,0 +1,6 @@
+[package]
+name = "vuln_defi"
+edition = "2024.beta"
+
+[addresses]
+vuln_defi = "0x0"

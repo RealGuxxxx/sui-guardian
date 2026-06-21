@@ -1,0 +1,10 @@
+[package]
+name = "i256"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://gitee.com/mystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+
+[addresses]
+i256 = "0x0"
+sui =  "0x2"

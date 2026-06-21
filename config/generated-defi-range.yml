@@ -1,0 +1,180 @@
+network:
+  name: testnet
+  graphqlEndpoint: https://graphql.testnet.sui.io/graphql
+  pollIntervalMs: 5000
+  bootstrapLookbackCheckpoints: 0
+  checkpointOverlap: 1
+  maxCheckpointsPerTick: 45
+  maxTransactionsPerPage: 50
+
+storage:
+  stateFile: .data/generated-defi-range-state.json
+  maxAlerts: 1000
+
+server:
+  host: 0.0.0.0
+  port: 3011
+
+alerts:
+  console: true
+  webhookUrl: ""
+
+aiRules:
+  enabled: false
+  generatedDir: .data/generated
+  reloadIntervalMs: 60000
+
+projects:
+  - id: defi-range-lab
+    name: Sui DeFi 多漏洞靶场
+    packages:
+      - label: defi-range-arena
+        address: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        allowedUpgradeSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+    protectedAddresses:
+      - label: lending-pool-vault
+        address: "0xd4f07d3e8f1dc4a7ceed270d4839107b8494ec1be3bd0d92c1460d0cce70ea8a"
+        outflowThresholds:
+          "0x2::sui::SUI": "100000000"
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+      - label: admin-vault
+        address: "0x39058e298c618fb0c0b68929058c535aaffc086c55fcaeed8479033d6b48e0d4"
+        outflowThresholds:
+          "0x2::sui::SUI": "100000000"
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+      - label: price-bank-vault
+        address: "0x39a581d6521337ef6e8302e68a4b4e9d32e9676aa994515984cde7ff4e79096b"
+        outflowThresholds:
+          "0x2::sui::SUI": "100000000"
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+    functionGuards:
+      - label: lending-emergency-withdraw
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        module: arena
+        function: emergency_withdraw_all
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+        severity: critical
+      - label: admin-takeover
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        module: arena
+        function: change_admin_anyone
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+        severity: high
+      - label: admin-withdraw
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        module: arena
+        function: admin_withdraw
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+        severity: critical
+      - label: oracle-update
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        module: arena
+        function: update_price_anyone
+        allowedSenders:
+          - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+        severity: high
+    trafficSpikes:
+      - label: arena-hot-path
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        windowSeconds: 120
+        txCountThreshold: 4
+        uniqueSenderThreshold: 1
+        severity: low
+        cooldownSeconds: 120
+    failureSpikes:
+      - label: arena-probe-burst
+        package: "0xf139ffade320a28b2ae8986aa2cbb09333d1a4f4c291b493e87d62c2727481b3"
+        windowSeconds: 120
+        failedTxThreshold: 2
+        severity: medium
+        cooldownSeconds: 120
+    trackedObjects:
+      - label: lending-pool
+        address: "0xd4f07d3e8f1dc4a7ceed270d4839107b8494ec1be3bd0d92c1460d0cce70ea8a"
+        watchFields: [admin, vault]
+        criticalFields: [admin]
+        numericDecreaseThresholds:
+          vault: "100000000"
+        severity: critical
+      - label: admin-vault
+        address: "0x39058e298c618fb0c0b68929058c535aaffc086c55fcaeed8479033d6b48e0d4"
+        watchFields: [admin, vault]
+        criticalFields: [admin]
+        numericDecreaseThresholds:
+          vault: "100000000"
+        severity: critical
+      - label: oracle-feed
+        address: "0x9d20ed36ce90bdd4a80d28c566c25a54fbbc6b020b235879304432fde8d40f87"
+        watchFields: [admin, price]
+        criticalFields: [price]
+        severity: high
+      - label: price-bank
+        address: "0x39a581d6521337ef6e8302e68a4b4e9d32e9676aa994515984cde7ff4e79096b"
+        watchFields: [admin, oracle_id, min_price_for_borrow, vault]
+        numericDecreaseThresholds:
+          vault: "100000000"
+        severity: critical
+    suspiciousTargets: []
+    behaviorRules:
+      enabled: true
+      minRepeatedCalls: 2
+      minProtectedOutflow: "100000000"
+      priceDeviationThresholdBps: 1500
+    priceModels:
+      - label: oracle-feed-price
+        trackedObjectLabel: oracle-feed
+        observedFieldPath: price
+        referenceMode: rolling_median
+        deviationThresholdBps: 1500
+    objectBaselines:
+      - label: lending-pool-admin
+        trackedObjectLabel: lending-pool
+        fields:
+          - path: admin
+            kind: permission
+            allowedSenders:
+              - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+          - path: vault
+            kind: inventory
+            maxAbsoluteDecrease: "100000000"
+      - label: admin-vault-admin
+        trackedObjectLabel: admin-vault
+        fields:
+          - path: admin
+            kind: permission
+            allowedSenders:
+              - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+          - path: vault
+            kind: inventory
+            maxAbsoluteDecrease: "100000000"
+      - label: oracle-feed-price
+        trackedObjectLabel: oracle-feed
+        fields:
+          - path: price
+            kind: price
+            allowedSenders:
+              - "0xe437071484a9ab02e0ebf4f5f14bf113387baf5005a9170b4cf4683e3689e844"
+            maxDeltaBps: 1500
+      - label: price-bank-vault
+        trackedObjectLabel: price-bank
+        fields:
+          - path: vault
+            kind: inventory
+            maxAbsoluteDecrease: "100000000"
+    flowTracking:
+      enabled: true
+      minProtectedOutflow: "100000000"
+      attackerGainThreshold: "100000000"
+      shortWindowTxCount: 2
+    suppression:
+      enabled: true
+      duplicateWindowSeconds: 600
+      weakSignalScoreThreshold: 35
+      maintenanceWindows: []

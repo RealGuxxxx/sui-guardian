@@ -1,0 +1,104 @@
+#
+# 真实项目配置模板
+# - 该文件用于接入真实业务项目
+# - 不应直接用于演练配置
+# - 演练验证请使用单独的 lab/generated 配置并显式传入
+#
+network:
+  name: mainnet
+  graphqlEndpoint: https://graphql.mainnet.sui.io/graphql
+  pollIntervalMs: 3000
+  bootstrapLookbackCheckpoints: 10
+  checkpointOverlap: 3
+  maxCheckpointsPerTick: 10
+  maxTransactionsPerPage: 100
+
+storage:
+  stateFile: .data/state.json
+  maxAlerts: 500
+
+server:
+  host: 0.0.0.0
+  port: 3000
+
+alerts:
+  console: true
+  webhookUrl: https://hooks.slack.com/services/replace/me
+
+projects:
+  - id: your-protocol
+    name: 你的协议监控
+    packages:
+      - label: core-package
+        address: "0x1111111111111111111111111111111111111111111111111111111111111111"
+        allowedUpgradeSenders:
+          - "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        deprecatedAddresses:
+          # 可选：已废弃但仍可能被攻击者调用的旧包地址
+          - "0x2222222222222222222222222222222222222222222222222222222222222222"
+    protectedAddresses:
+      - label: treasury
+        address: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        outflowThresholds:
+          0x2::sui::SUI: "500000000000" # 500 SUI，按 9 decimals 的原始值填写
+        allowedSenders:
+          - "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    functionGuards:
+      - label: emergency-withdraw
+        package: "0x1111111111111111111111111111111111111111111111111111111111111111"
+        module: vault
+        function: emergency_withdraw
+        allowedSenders:
+          - "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        severity: critical
+    trafficSpikes:
+      - label: core-package-hot-burst
+        package: "0x1111111111111111111111111111111111111111111111111111111111111111"
+        windowSeconds: 60
+        txCountThreshold: 80
+        uniqueSenderThreshold: 30
+        severity: high
+        cooldownSeconds: 300
+    failureSpikes:
+      - label: core-package-failure-burst
+        package: "0x1111111111111111111111111111111111111111111111111111111111111111"
+        windowSeconds: 60
+        failedTxThreshold: 20
+        severity: medium
+        cooldownSeconds: 300
+    trackedObjects:
+      - label: main-vault-object
+        address: "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        watchFields:
+          - balance
+          - admin
+        criticalFields:
+          - admin
+        numericDecreaseThresholds:
+          balance: "100000000000"
+        severity: high
+    suspiciousTargets: []
+    behaviorRules:
+      enabled: true
+      minRepeatedCalls: 2
+      minProtectedOutflow: "100000000000"
+      priceDeviationThresholdBps: 1500
+    priceModels: []
+    objectBaselines:
+      - label: main-vault-admin-baseline
+        trackedObjectLabel: main-vault-object
+        fields:
+          - path: admin
+            kind: permission
+            allowedSenders:
+              - "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    flowTracking:
+      enabled: true
+      minProtectedOutflow: "100000000000"
+      attackerGainThreshold: "100000000000"
+      shortWindowTxCount: 2
+    suppression:
+      enabled: true
+      duplicateWindowSeconds: 600
+      weakSignalScoreThreshold: 35
+      maintenanceWindows: []

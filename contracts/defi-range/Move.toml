@@ -1,0 +1,6 @@
+[package]
+name = "defi_range"
+edition = "2024.beta"
+
+[addresses]
+defi_range = "0x0"

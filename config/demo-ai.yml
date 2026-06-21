@@ -1,0 +1,69 @@
+network:
+  name: testnet
+  graphqlEndpoint: https://graphql.testnet.sui.io/graphql
+  pollIntervalMs: 5000
+  bootstrapLookbackCheckpoints: 5
+  checkpointOverlap: 2
+  maxCheckpointsPerTick: 2
+  maxTransactionsPerPage: 20
+
+storage:
+  stateFile: .data/demo-ai-state.json
+  maxAlerts: 200
+
+server:
+  host: 0.0.0.0
+  port: 3000
+
+alerts:
+  console: true
+  webhookUrl: ""
+
+aiRules:
+  enabled: true
+  generatedDir: .data/generated
+  reloadIntervalMs: 10000
+  shadow:
+    enabled: true
+    notify: false
+    minMinutes: 60
+  canary:
+    enabled: true
+    stage: shadow
+    promotionMinMinutes: 60
+  generator:
+    enabled: false
+    sourceRoot: ""
+    deploymentsDir: .data/deployments
+    modelBaseUrl: https://ai.immortality.top
+    modelName: gpt-5.4
+    regenerateIntervalHours: 168
+
+projects:
+  - id: demo-ai
+    name: Demo AI (Testnet)
+    packages: []
+    protectedAddresses: []
+    functionGuards: []
+    trafficSpikes: []
+    failureSpikes: []
+    trackedObjects: []
+    suspiciousTargets: []
+    behaviorRules:
+      enabled: true
+      minRepeatedCalls: 2
+      minProtectedOutflow: "1"
+      priceDeviationThresholdBps: 1500
+    priceModels: []
+    objectBaselines: []
+    flowTracking:
+      enabled: true
+      minProtectedOutflow: "1"
+      attackerGainThreshold: "1"
+      shortWindowTxCount: 2
+    suppression:
+      enabled: true
+      duplicateWindowSeconds: 600
+      weakSignalScoreThreshold: 35
+      maintenanceWindows: []
+
